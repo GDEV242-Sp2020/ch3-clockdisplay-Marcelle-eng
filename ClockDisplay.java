@@ -78,26 +78,23 @@
      */
     private void updateDisplay()
     {
+        int hour = hours.getValue();
+        String time;
         
-        if(hours.getValue() < 12)
-         {
-             displayString = hours.getDisplayValue() + ":" +
-            minutes.getDisplayValue() + " am";
+        if(hour >= 12){
+             time = "pm";
          }
                  
-       else if(hours.getValue() > 12 && hours.getValue() <24)
-          {
-            displayString = Integer.toString(hours.getValue() - 12) + ":" + 
-            minutes.getDisplayValue() + " pm";
+         else {
+             time = "am";
           }
-       else if(hours.getValue() == 0) 
-         {
-            hours.setValue(12); 
-            displayString = hours.getDisplayValue() + ":"+
-            minutes.getDisplayValue() + " am";    
-                       
-         }  
-              
+        if (hour >+ 12){
+            hour = hour - 12;
        
-}
+        }
+        if (hour == 0){
+            hour = 12;
+        }
+        displayString = hour + ":" + minutes.getDisplayValue() + time;
+    }
 }
