@@ -17,7 +17,7 @@ public class ClockDisplay
     private NumberDisplay hours;
     private NumberDisplay minutes;
     private String displayString;    // simulates the actual display
-    
+    private String meridian;
     /**
      * Constructor for ClockDisplay objects. This constructor 
      * creates a new clock set at 00:00.
@@ -26,6 +26,7 @@ public class ClockDisplay
     {
         hours = new NumberDisplay(12);
         minutes = new NumberDisplay(60);
+        meridian = "am";
         updateDisplay();
     }
 
@@ -34,11 +35,13 @@ public class ClockDisplay
      * creates a new clock set at the time specified by the 
      * parameters.
      */
-    public ClockDisplay(int hour, int minute)
+ public ClockDisplay(int hour, int minute, String amPm)
+    
     {
         hours = new NumberDisplay(12);
         minutes = new NumberDisplay(60);
-        setTime(hour, minute);
+        meridian =  meridian;
+        setTime(hour, minute,amPm);
     }
 
     /**
@@ -47,30 +50,44 @@ public class ClockDisplay
      */
     public void timeTick()
     {
-        minutes.increment();
-        if(minutes.getValue() == 0) {  // it just rolled over!
+    minutes.increment();
+    if(minutes.getValue() == 0) {  // it just rolled over!
             hours.increment();
+         }
+        
+    if(hours.getValue()==12) 
+        { 
+            meridian = "pm";
         }
-        updateDisplay();
-    }
+        else 
+         {
+            meridian = "am";
+         }
+    updateDisplay();
+ }
 
     /**
      * Set the time of the display to the specified hour and
      * minute.
      */
-    public void setTime(int hour, int minute)
+ public void setTime(int hour, int minute,String amPm)
     {
+        if (hour == 0)
+        {
+            hour = 12;
+        }
+        
         hours.setValue(hour);
         minutes.setValue(minute);
+        meridian = amPm;
         updateDisplay();
-        
-        
     }
+    
 
     /**
      * Return the current time of this display in the format HH:MM.
      */
-    public String getTime()
+  public String getTime()
     {
         return displayString;
     }
@@ -78,23 +95,12 @@ public class ClockDisplay
     /**
      * Update the internal string that represents the display.
      */
-    private void updateDisplay()
+  private void updateDisplay()
     {
-        String time;
-        int hour = hours.getValue();
-        if (hour >= 12 ) {
-            time = "pm";
-        }
-        else {
-            time ="am";
-        }
-        if (hour >= 12 ){
-            hour = hour - 12;
-        }
-        if (hour == 0) {
-        hour = 12;
-        }
-        displayString = hour + ":" + 
-                        minutes.getDisplayValue() + time;
+        if (hours.getValue()==0)
+        displayString = "12"+ ":" + minutes.getDisplayValue() + meridian; //formats that hour that is 00, turns to 12
+        else
+        displayString = hours.getDisplayValue() + ":" + minutes.getDisplayValue() + meridian; //if not 0  
     }
 }
+
